@@ -57,7 +57,9 @@ struct FruitList: View {
                         isShowInputView = false
                     },
                     onSave: {
-                        fruitItems.items.append($0)
+                        fruitItems.items.append(
+                            FruitModel(name: $0, isChecked: false)
+                        )
                         isShowInputView = false
                     })
                 })
@@ -98,7 +100,7 @@ struct FruitView: View {
                                     isShowEditView = false
                                 },
                                 onSave: {
-                                    fruit.name = $0.name
+                                    fruit.name = $0
                                     isShowEditView = false
                 })
             })
@@ -109,7 +111,7 @@ struct FruitView: View {
 struct InputView: View {
     @Binding var text: String
     var onCancel: () -> Void
-    var onSave: (FruitModel) -> Void
+    var onSave: (String) -> Void
 
     var body: some View {
         NavigationView {
@@ -136,8 +138,8 @@ struct InputView: View {
     }
     private func addIfPossible() {
         let name = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if name == "" { return }
-        onSave(FruitModel(name: name, isChecked: false))
+        guard !name.isEmpty else { return }
+        onSave(name)
     }
 }
 
